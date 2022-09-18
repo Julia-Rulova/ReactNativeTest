@@ -1,0 +1,123 @@
+import styled from 'styled-components/native';
+import { useState } from 'react';
+
+
+import Header from './Header';
+import Popup from './Popup';
+import { LOGIN, PASSWORD } from '../constants/utils';
+
+const Form = styled.View`
+    margin: 14px 15px 0;
+    border: 5px solid #27569C;
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    shadow-color: #000;
+    background-color: #fff;
+    elevation: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+const Title = styled.Text`
+    font-style: normal;
+    font-weight: 800;
+    line-height: 29px;
+    font-size: 24px;
+    color: #27569C;
+    text-align: center;
+    padding: 8px 0;
+    margin: 8px auto 0;
+`;
+
+const InputContainer = styled.View`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0 43px 13px 35px;
+    width: 66.25%;
+`;
+
+const InputText = styled.Text`
+    font-style: normal;
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 29px;
+    height: 39px;
+    padding: 5px 0;
+    margin: 0 0 13px;
+`;
+
+const Input = styled.TextInput`
+    padding: 5px;
+    height: 39px;
+    background: #D9D9D9;
+    border:  4px solid #27569C;
+    border-radius: 10px;
+    margin-bottom: 13px;
+    width: 100%;
+`;
+
+const SubmitBtn = styled.TouchableOpacity`
+    height: 43px;
+    width: 66.25%;
+    background: #E4B062;
+    border-radius: 10px;
+    margin: 10px 43px 34px 32px;
+    text-align: center;
+`;
+
+const SubmitBtnText = styled.Text`
+    font-style: normal;
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 29px;
+    text-align: center;
+    padding: 7px 0;
+    margin: 0;
+`;
+
+function Authorization({ navigation }) {
+    const [login, setLogin] = useState('');
+    const [password, setPassword] = useState('');
+    const [popupOpen, setPopupOpen] = useState(false);
+
+    function handleSubmit(evt) {
+        evt.preventDefault();
+        if (login === LOGIN && password === PASSWORD) {
+            navigation.navigate('Posts');
+        }
+        else {
+            setPopupOpen(true);
+        }
+    }
+
+    if (popupOpen) {
+        setTimeout((() => {
+            setPopupOpen(false);
+        }), 3000);
+    }
+
+    return (
+        <>
+            <Header auth={false} />
+            <Popup isOpen={popupOpen} />
+            <Form>
+                <Title>Autorization</Title>
+                <InputContainer>
+                    <InputText>login</InputText>
+                    <Input onChangeText={(login) => setLogin(login)} />
+                </InputContainer>
+                <InputContainer>
+                    <InputText>password</InputText>
+                    <Input secureTextEntry={true} onChangeText={(password) => setPassword(password)} />
+                </InputContainer>
+                <SubmitBtn onPress={handleSubmit}>
+                    <SubmitBtnText>Submit</SubmitBtnText>
+                </SubmitBtn>
+            </Form>
+        </>
+    )
+}
+
+export default Authorization;
