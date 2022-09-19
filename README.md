@@ -2,40 +2,41 @@
 
 ## Инструкция по запуску
 
-login: user
-password: 321
+> login: user
+> password: 321
 
 1. Для проверки клонируем репозиторий
-git clone https://github.com/Julia-Rulova/ReactNativeTest.git
+> git clone https://github.com/Julia-Rulova/ReactNativeTest.git
 
 2. Заходим в папку приложения
-cd ReactNativeTest
+> cd ReactNativeTest
 
 3. 
 * Для проверки мобильного приложения заходим в папку mobile
-cd mobile
+> cd mobile
 
 * Далее устанавливаем зависимости
-npm install
+> npm install
 
 * Запускаем приложение
-npm start
+> npm start
 
 * Сканируем QR-код из терминала
 
 4. 
 * Для проверки приложения для планшета заходим в папку tablet
-cd tablet
+> cd tablet
 
 * Далее устанавливаем зависимости
-npm install
+> npm install
 
 * Запускаем приложение
-npm start
+> npm start
 
 * Сканируем QR-код из терминала
 
 ___
 
 На выполнение задания было потрачено около 15 часов
+
 Выполнила: Рылова Юлия Алексеевна
