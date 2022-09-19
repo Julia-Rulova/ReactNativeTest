@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import styled from 'styled-components/native';
 
 import { LOGIN, PASSWORD } from '../constants/utils';
+import Header from './Header';
+import Popup from './Popup';
 
 const Form = styled.View`
     width: 480px;
-    margin: 284px auto 0;
+    margin: 30% auto 0;
     border: 5px solid #27569C;
     border-radius: 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -74,22 +77,46 @@ const SubmitBtnText = styled.Text`
     margin: 0;
 `;
 
-function Authorization() {
+function Authorization({ navigation }) {
+    const [login, setLogin] = useState('');
+    const [password, setPassword] = useState('');
+    const [popupOpen, setPopupOpen] = useState(false);
+
+    function handleSubmit(evt) {
+        evt.preventDefault();
+        if (login === LOGIN && password === PASSWORD) {
+            navigation.navigate('Posts');
+        }
+        else {
+            setPopupOpen(true);
+        }
+    }
+
+    if (popupOpen) {
+        setTimeout((() => {
+            setPopupOpen(false);
+        }), 3000);
+    }
+
     return (
-        <Form>
-            <Title>Autorization</Title>
-            <InputContainer>
-                <InputText>login</InputText>
-                <Input />
-            </InputContainer>
-            <InputContainer>
-                <InputText>password</InputText>
-                <Input />
-            </InputContainer>
-            <SubmitBtn>
-                <SubmitBtnText>Submit</SubmitBtnText>
-            </SubmitBtn>
-        </Form>
+        <>
+            <Header auth={false} />
+            <Popup isOpen={popupOpen} />
+            <Form>
+                <Title>Autorization</Title>
+                <InputContainer>
+                    <InputText>login</InputText>
+                    <Input onChangeText={(login) => setLogin(login)} />
+                </InputContainer>
+                <InputContainer>
+                    <InputText>password</InputText>
+                    <Input secureTextEntry={true} onChangeText={(password) => setPassword(password)} />
+                </InputContainer>
+                <SubmitBtn onPress={handleSubmit}>
+                    <SubmitBtnText>Submit</SubmitBtnText>
+                </SubmitBtn>
+            </Form>
+        </>
     )
 }
 

@@ -1,4 +1,6 @@
+import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
+import { useNavigation } from '@react-navigation/native';
 
 const HeaderContainer = styled.View`
     width: 100%;
@@ -45,14 +47,20 @@ const ExitArrow = styled.Image`
 `;
 
 function Header({ auth }) {
+    const navigation = useNavigation();
+
+    function Exit() {
+        navigation.navigate('Authorization');
+    }
+
     return (
         <HeaderContainer>
             <Logo source={require('../assets/logo.png')} />
             {auth ?
-                <>
+                <TouchableOpacity style={{ padding: 300 }} onPress={Exit}>
                     <ExitSquare source={require('../assets/square.png')} />
                     <ExitArrow source={require('../assets/arrow.png')} />
-                </>
+                </TouchableOpacity>
                 :
                 ''
             }

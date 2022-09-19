@@ -1,4 +1,9 @@
+import { useEffect, useState } from "react";
+import { ScrollView } from "react-native";
 import styled from 'styled-components/native';
+
+import Header from "./Header";
+import Post from "./Post";
 
 const PostsContainer = styled.View`
     display: flex;
@@ -9,100 +14,43 @@ const PostsContainer = styled.View`
     width: 89%;
 `;
 
-const Post = styled.View`
-    width: 48.5%;
-    border: 5px solid #27569C;
-    border-radius: 6px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    shadow-color: #000;
-    background-color: #fff;
-    elevation: 10;
-    display: flex;
-    text-align: left;
-    flex-direction: column;
-    margin: 0 0 25px;
-    padding: 25px 20px 41px 25px;
-`;
-
-const Author = styled.Text`
-    font-style: normal;
-    font-weight: 800;
-    font-size: 16px;
-    line-height: 19px;
-    text-align: left;
-    color: #000;
-    padding: 0;
-    margin: 0 0 8px;
-`;
-
-const Company = styled.Text`
-    font-style: normal;
-    font-weight: 800;
-    font-size: 16px;
-    line-height: 19px;
-    color: #000;
-    text-align: left;
-    padding: 0;
-    margin: 0 0 8px;
-`;
-
-const Title = styled.Text`
-    font-style: normal;
-    font-weight: 800;
-    font-size: 16px;
-    line-height: 19px;
-    color: #000;
-    text-align: left;
-    padding: 0;
-    margin: 0 0 8px;
-`;
-
-const Content = styled.Text`
-    font-style: normal;
-    font-weight: 800;
-    font-size: 16px;
-    line-height: 19px;
-    color: #000;
-    text-align: left;
-    padding: 0;
-    margin: 0;
-`;
-
-
-const PostImage = styled.Image`
-    width: 150px;
-    height: 150px;
-    background-color: #000;
-    object-fit: cover;
-    margin-bottom: 22px;
-`;
-
 function Posts() {
+    const [posts, setPosts] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [photos, setPhotos] = useState([]);
+
+    useEffect(() => {
+        Promise.all([
+            fetch('https://jsonplaceholder.typicode.com/posts').then(posts => posts.json()),
+            fetch('https://jsonplaceholder.typicode.com/users').then(users => users.json()),
+            fetch('https://jsonplaceholder.typicode.com/photos').then(photos => photos.json())
+        ]).then(([posts, users, photos]) => {
+            setPhotos(photos);
+            setUsers(users);
+            setPosts(posts);
+        })
+    }, []);
 
     return (
-        <PostsContainer>
-            <Post>
-                <PostImage source={require('../assets/logo.png')} />
-                <Author>Autor: Leanne Graham</Author>
-                <Company>Company: Romaguera-Crona</Company>
-                <Title>Title:sunt aut facere repellat provident occaecati excepturi optio reprehenderit</Title>
-                <Content numberOfLines={5} ellipsizeMode='tail'>est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis</Content>
-            </Post>
-            <Post>
-                <PostImage source={require('../assets/logo.png')} />
-                <Author>Autor: Leanne Graham</Author>
-                <Company>Company: Romaguera-Crona</Company>
-                <Title>Title:sunt aut facere repellat provident occaecati excepturi optio reprehenderit</Title>
-                <Content numberOfLines={5} ellipsizeMode='tail'>est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis</Content>
-            </Post>
-            <Post>
-                <PostImage source={require('../assets/logo.png')} />
-                <Author>Autor: Leanne Graham</Author>
-                <Company>Company: Romaguera-Crona</Company>
-                <Title>Title:sunt aut facere repellat provident occaecati excepturi optio reprehenderit</Title>
-                <Content numberOfLines={5} ellipsizeMode='tail'>est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis</Content>
-            </Post>
-        </PostsContainer >
+        <>
+            <Header auth={true} />
+            <ScrollView>
+                <PostsContainer>
+                    {
+                        posts.map((post) => {
+                            return (
+                                <Post
+                                    post={post}
+                                    user={users.find(x => x.id === post.userId)}
+                                    photo={photos.find(x => x.albumId === post.userId)}
+                                    key={post.id}
+                                />
+                            )
+                        })
+                    }
+                </PostsContainer>
+            </ScrollView>
+        </>
     )
 }
 

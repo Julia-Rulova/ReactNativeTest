@@ -1,6 +1,5 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { FlatList, ScrollView, Text } from "react-native";
+import { ScrollView } from "react-native";
 
 import Header from "./Header";
 import Post from "./Post";
@@ -9,18 +8,16 @@ function Posts() {
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState([]);
 
-    useEffect(() => {
-        axios.get('https://jsonplaceholder.typicode.com/posts')
-            .then(({ data }) => {
-                setPosts(data);
-            });
-        axios.get('https://jsonplaceholder.typicode.com/users')
-            .then(({ data }) => {
-                setUsers(data);
-            });
-    }, []);
 
-    console.warn(users[0]);
+    useEffect(() => {
+        Promise.all([
+            fetch('https://jsonplaceholder.typicode.com/posts').then(posts => posts.json()),
+            fetch('https://jsonplaceholder.typicode.com/users').then(users => users.json())
+        ]).then(([posts, users]) => {
+            setUsers(users);
+            setPosts(posts);
+        })
+    }, []);
 
     return (
         <>
@@ -29,7 +26,10 @@ function Posts() {
                 {
                     posts.map((post) => {
                         return (
-                            <Post post={post} user={users[post.userId - 1]} key={post.id} />
+                            <Post
+                                post={post}
+                                user={users.find(x => x.id === post.userId)}
+                                key={post.id} />
                         )
                     })
                 }
